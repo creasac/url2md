@@ -58,7 +58,7 @@ npm run dev
 Worker:
 
 - Worker name is set in `worker/wrangler.jsonc`
-- current name: `url2md-api`
+- current name: `url2md`
 
 ```bash
 cd worker

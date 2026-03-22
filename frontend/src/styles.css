@@ -4,12 +4,19 @@
   font-family: Georgia, "Times New Roman", serif;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  overflow: hidden;
 }
 
 button,
@@ -19,18 +26,25 @@ textarea {
 }
 
 .app-shell {
-  min-height: 100vh;
+  height: 100%;
+  min-height: 0;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
 }
 
 .toolbar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .url-input,
 .extract-button,
+.pane-action,
 .editor,
 .preview {
   border: 1px solid #d6d3d1;
@@ -39,7 +53,9 @@ textarea {
 }
 
 .url-input {
-  width: 100%;
+  width: 50%;
+  max-width: 50%;
+  min-width: 240px;
   padding: 12px 14px;
 }
 
@@ -53,42 +69,88 @@ textarea {
   opacity: 0.7;
 }
 
+.pane-action {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.icon-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-button.is-success {
+  color: #15803d;
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.pane-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .status {
-  margin: 12px 2px 18px;
+  margin: 0;
+  min-width: 0;
+  flex: 1 1 auto;
   color: #57534e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .panes {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 16px;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .pane {
   min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .pane-header {
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   font-size: 0.95rem;
   color: #44403c;
 }
 
 .editor,
 .preview {
-  min-height: calc(100vh - 170px);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
 }
 
 .editor {
   width: 100%;
-  resize: vertical;
+  resize: none;
   padding: 16px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   line-height: 1.5;
 }
 
 .preview {
-  overflow: auto;
   padding: 16px 18px;
   line-height: 1.65;
 }
@@ -118,8 +180,19 @@ textarea {
 }
 
 @media (max-width: 900px) {
+  .toolbar {
+    flex-wrap: wrap;
+  }
+
+  .url-input {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
   .panes {
     grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .editor,

@@ -12,11 +12,51 @@ type ExtractResponse = {
 
 const apiBase = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
 
+function CopyIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <rect x="9" y="9" width="10" height="10" rx="2" ry="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 4v10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="m8 10 4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5 18h14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="m5 12 4.5 4.5L19 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function toDownloadFilename(value: string) {
+  const sanitized = value
+    .trim()
+    .replace(/[<>:"/\\|?*\u0000-\u001f]+/g, " ")
+    .replace(/\s+/g, " ")
+    .replace(/\.+$/g, "")
+    .trim();
+
+  return `${sanitized || "extracted"}.md`;
+}
+
 function App() {
   const [url, setUrl] = useState("");
   const [markdown, setMarkdown] = useState("");
+  const [title, setTitle] = useState("extracted");
   const [status, setStatus] = useState("Paste a URL and extract.");
   const [isExtracting, setIsExtracting] = useState(false);
+  const [copyLabel, setCopyLabel] = useState("Copy");
 
   const previewMarkdown = useMemo(
     () => markdown || "_No content yet._",
@@ -50,6 +90,7 @@ function App() {
       }
 
       setMarkdown(payload.markdown);
+      setTitle(payload.title || "extracted");
       setStatus(`${payload.title} | ${payload.capture}`);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Extraction failed.";
@@ -57,6 +98,34 @@ function App() {
     } finally {
       setIsExtracting(false);
     }
+  }
+
+  async function handleCopy() {
+    if (!markdown) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(markdown);
+      setCopyLabel("Copied");
+      window.setTimeout(() => setCopyLabel("Copy"), 1200);
+    } catch {
+      setStatus("Copy failed.");
+    }
+  }
+
+  function handleDownload() {
+    if (!markdown) {
+      return;
+    }
+
+    const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = objectUrl;
+    anchor.download = toDownloadFilename(title);
+    anchor.click();
+    URL.revokeObjectURL(objectUrl);
   }
 
   return (
@@ -73,13 +142,26 @@ function App() {
         <button className="extract-button" type="submit" disabled={isExtracting}>
           {isExtracting ? "Extracting" : "Extract"}
         </button>
+        <p className="status" role="status">
+          {status}
+        </p>
       </form>
-
-      <p className="status">{status}</p>
 
       <section className="panes">
         <section className="pane">
-          <header className="pane-header">Raw MD</header>
+          <header className="pane-header">
+            <span>Raw MD</span>
+            <button
+              aria-label={copyLabel}
+              className={`pane-action icon-button${copyLabel === "Copied" ? " is-success" : ""}`}
+              title={copyLabel}
+              type="button"
+              onClick={handleCopy}
+              disabled={!markdown}
+            >
+              {copyLabel === "Copied" ? <CheckIcon /> : <CopyIcon />}
+            </button>
+          </header>
           <textarea
             className="editor"
             value={markdown}
@@ -89,7 +171,19 @@ function App() {
         </section>
 
         <section className="pane">
-          <header className="pane-header">Rendered</header>
+          <header className="pane-header">
+            <button
+              aria-label="Download markdown"
+              className="pane-action icon-button"
+              title="Download markdown"
+              type="button"
+              onClick={handleDownload}
+              disabled={!markdown}
+            >
+              <DownloadIcon />
+            </button>
+            <span>Rendered</span>
+          </header>
           <div className="preview">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{previewMarkdown}</ReactMarkdown>
           </div>
