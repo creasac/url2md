@@ -1,6 +1,6 @@
-# url2md-web
+# url2md
 
-Minimal Cloudflare web UI for `url2md`.
+Minimal Cloudflare web tool for `url2md`.
 
 ## What it does
 
@@ -12,15 +12,25 @@ Minimal Cloudflare web UI for `url2md`.
 
 - `frontend/`: React + Vite app for Cloudflare Pages
 - `worker/`: Cloudflare Worker API
-- `worker/patches/`: local patch-package fixes for `@cloudflare/puppeteer`
+- `worker/patches/`: `patch-package` fixes for `@cloudflare/puppeteer`
 
 ## Requirements
 
 - Cloudflare account
 - `workers.dev` subdomain configured
-- Browser Rendering available for the Worker
+- Browser Rendering enabled for the Worker
 
 ## Local dev
+
+Recommended for normal use: run the frontend locally and point it at the deployed Worker.
+
+```bash
+cd frontend
+npm install
+VITE_API_BASE_URL="https://<your-worker>.workers.dev" npm run dev
+```
+
+If you are changing backend code too, run both locally.
 
 Worker:
 
@@ -29,8 +39,6 @@ cd worker
 npm install
 npm run dev
 ```
-
-Worker runs on `http://127.0.0.1:8787`.
 
 Frontend:
 
@@ -40,23 +48,30 @@ npm install
 npm run dev
 ```
 
-- Frontend dev URL is usually `http://127.0.0.1:5173`
-- local dev uses static capture only
+- local Worker runs on `http://127.0.0.1:8787`
+- frontend dev URL is usually `http://127.0.0.1:5173`
+- local Worker uses static capture only
 - deployed Worker uses static + rendered capture
 
 ## Deploy
 
 Worker:
 
+- Worker name is set in `worker/wrangler.jsonc`
+- current name: `url2md-api`
+
 ```bash
 cd worker
 npx wrangler deploy
 ```
 
-Git-integrated Cloudflare setup:
+Cloudflare Pages Git setup:
 
-- Cloudflare Pages root directory: `frontend`
-- Cloudflare Pages build command: `npm run build`
-- Cloudflare Pages build output directory: `dist`
-- Cloudflare Pages env var: `VITE_API_BASE_URL=https://<your-worker-url>`
-- Cloudflare Workers Builds root directory: `worker`
+- root directory: `frontend`
+- build command: `npm run build`
+- build output directory: `dist`
+- env var: `VITE_API_BASE_URL=https://<your-worker>.workers.dev`
+
+Cloudflare Workers Builds Git setup:
+
+- root directory: `worker`
