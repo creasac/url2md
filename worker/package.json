@@ -1,0 +1,23 @@
+{
+  "name": "url2md-web-worker",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "build": "wrangler deploy --dry-run",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "patch-package"
+  },
+  "dependencies": {
+    "@cloudflare/puppeteer": "^1.0.2",
+    "linkedom": "^0.18.12",
+    "turndown": "^7.2.0",
+    "buffer": "^6.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "wrangler": "^4.39.0",
+    "patch-package": "^8.0.0"
+  }
+}

@@ -1,0 +1,129 @@
+:root {
+  color: #111827;
+  background: #f5f5f4;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+}
+
+.url-input,
+.extract-button,
+.editor,
+.preview {
+  border: 1px solid #d6d3d1;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.url-input {
+  width: 100%;
+  padding: 12px 14px;
+}
+
+.extract-button {
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.extract-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.status {
+  margin: 12px 2px 18px;
+  color: #57534e;
+}
+
+.panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.pane {
+  min-width: 0;
+}
+
+.pane-header {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #44403c;
+}
+
+.editor,
+.preview {
+  min-height: calc(100vh - 170px);
+}
+
+.editor {
+  width: 100%;
+  resize: vertical;
+  padding: 16px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  line-height: 1.5;
+}
+
+.preview {
+  overflow: auto;
+  padding: 16px 18px;
+  line-height: 1.65;
+}
+
+.preview :first-child {
+  margin-top: 0;
+}
+
+.preview pre,
+.preview code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.preview pre {
+  overflow: auto;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f5f5f4;
+}
+
+.preview img {
+  max-width: 100%;
+}
+
+.preview a {
+  color: #0f766e;
+}
+
+@media (max-width: 900px) {
+  .panes {
+    grid-template-columns: 1fr;
+  }
+
+  .editor,
+  .preview {
+    min-height: 45vh;
+  }
+}

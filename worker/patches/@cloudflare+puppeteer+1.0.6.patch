@@ -1,0 +1,67 @@
+diff --git a/node_modules/@cloudflare/puppeteer/lib/cjs/puppeteer/cloudflare/globalPatcher.js b/node_modules/@cloudflare/puppeteer/lib/cjs/puppeteer/cloudflare/globalPatcher.js
+index 89c7724..84d6fe0 100644
+--- a/node_modules/@cloudflare/puppeteer/lib/cjs/puppeteer/cloudflare/globalPatcher.js
++++ b/node_modules/@cloudflare/puppeteer/lib/cjs/puppeteer/cloudflare/globalPatcher.js
+@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
+  * Copyright 2025 Google Inc.
+  * SPDX-License-Identifier: Apache-2.0
+  */
+-const node_buffer_1 = require("node:buffer");
+-globalThis.Buffer = node_buffer_1.Buffer;
++const buffer_1 = require("buffer");
++if (!globalThis.Buffer) {
++    globalThis.Buffer = buffer_1.Buffer;
++}
+ //# sourceMappingURL=globalPatcher.js.map
+\ No newline at end of file
+diff --git a/node_modules/@cloudflare/puppeteer/lib/cjs/puppeteer/common/util.js b/node_modules/@cloudflare/puppeteer/lib/cjs/puppeteer/common/util.js
+index 84d88ef..8ad6caa 100644
+--- a/node_modules/@cloudflare/puppeteer/lib/cjs/puppeteer/common/util.js
++++ b/node_modules/@cloudflare/puppeteer/lib/cjs/puppeteer/common/util.js
+@@ -29,7 +29,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
+ };
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.filterAsync = exports.fromAbortSignal = exports.fromEmitterEvent = exports.unitToPixels = exports.parsePDFOptions = exports.NETWORK_IDLE_TIME = exports.getSourceUrlComment = exports.SOURCE_URL_REGEX = exports.UTILITY_WORLD_NAME = exports.timeout = exports.validateDialogType = exports.getReadableFromProtocolStream = exports.getReadableAsBuffer = exports.importFSPromises = exports.evaluationString = exports.isDate = exports.isRegExp = exports.isPlainObject = exports.isNumber = exports.isString = exports.getSourcePuppeteerURLIfAvailable = exports.withSourcePuppeteerURLIfNone = exports.PuppeteerURL = exports.DEFAULT_VIEWPORT = exports.debugError = void 0;
+-const node_buffer_1 = require("node:buffer");
++const buffer_1 = require("buffer");
+ const rxjs_js_1 = require("../../third_party/rxjs/rxjs.js");
+ const version_js_1 = require("../generated/version.js");
+ // import {isNode} from '../environment.js';
+@@ -218,7 +218,7 @@ async function getReadableAsBuffer(readable, path) {
+         }
+     }
+     try {
+-        return node_buffer_1.Buffer.concat(buffers);
++        return buffer_1.Buffer.concat(buffers);
+     }
+     catch (error) {
+         (0, exports.debugError)(error);
+diff --git a/node_modules/@cloudflare/puppeteer/lib/esm/puppeteer/cloudflare/globalPatcher.js b/node_modules/@cloudflare/puppeteer/lib/esm/puppeteer/cloudflare/globalPatcher.js
+index 1bdcaef..47e6ab8 100644
+--- a/node_modules/@cloudflare/puppeteer/lib/esm/puppeteer/cloudflare/globalPatcher.js
++++ b/node_modules/@cloudflare/puppeteer/lib/esm/puppeteer/cloudflare/globalPatcher.js
+@@ -3,6 +3,8 @@
+  * Copyright 2025 Google Inc.
+  * SPDX-License-Identifier: Apache-2.0
+  */
+-import { Buffer } from 'node:buffer';
+-globalThis.Buffer = Buffer;
++import { Buffer } from 'buffer';
++if (!globalThis.Buffer) {
++    globalThis.Buffer = Buffer;
++}
+ //# sourceMappingURL=globalPatcher.js.map
+\ No newline at end of file
+diff --git a/node_modules/@cloudflare/puppeteer/lib/esm/puppeteer/common/util.js b/node_modules/@cloudflare/puppeteer/lib/esm/puppeteer/common/util.js
+index 321903d..66d2c93 100644
+--- a/node_modules/@cloudflare/puppeteer/lib/esm/puppeteer/common/util.js
++++ b/node_modules/@cloudflare/puppeteer/lib/esm/puppeteer/common/util.js
+@@ -3,7 +3,7 @@
+  * Copyright 2017 Google Inc.
+  * SPDX-License-Identifier: Apache-2.0
+  */
+-import { Buffer } from 'node:buffer';
++import { Buffer } from 'buffer';
+ import { filter, from, fromEvent, map, mergeMap, NEVER, Observable, timer, } from '../../third_party/rxjs/rxjs.js';
+ import { packageVersion } from '../generated/version.js';
+ // import {isNode} from '../environment.js';
